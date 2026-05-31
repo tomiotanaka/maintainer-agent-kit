@@ -4,6 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from .presets import get_preset, list_presets
 from .runner import AgentResult, run_agent_command
 from .workflows import build_prompt, get_workflow, list_workflows
 
@@ -22,13 +23,18 @@ def run_workflow(
   *,
   run: bool,
   agent_command: str | None,
+  preset: str | None = None,
   timeout: int,
 ) -> list[AgentResult]:
   workflow = get_workflow(workflow_name)
   results: list[AgentResult] = []
 
+  if agent_command and preset:
+    raise SystemExit("Use either --agent-command or --preset, not both.")
+  if preset:
+    agent_command = get_preset(preset).command
   if run and not agent_command:
-    raise SystemExit("--agent-command is required when --run is used")
+    raise SystemExit("--agent-command or --preset is required when --run is used")
 
   for role in workflow.roles:
     prompt = build_prompt(workflow, role, context)
@@ -68,6 +74,9 @@ def build_parser() -> argparse.ArgumentParser:
   list_parser = subparsers.add_parser("list", help="List available workflows.")
   list_parser.set_defaults(handler=handle_list)
 
+  presets_parser = subparsers.add_parser("presets", help="List provider command presets.")
+  presets_parser.set_defaults(handler=handle_presets)
+
   for workflow in list_workflows():
     workflow_parser = subparsers.add_parser(workflow.name, help=workflow.summary)
     workflow_parser.add_argument("context", nargs="?", help="Markdown/text context file.")
@@ -78,6 +87,11 @@ def build_parser() -> argparse.ArgumentParser:
       help="Preview prompts without executing an agent command. This is the default.",
     )
     workflow_parser.add_argument("--agent-command", help="Command to execute for each role.")
+    workflow_parser.add_argument(
+      "--preset",
+      choices=sorted(preset.name for preset in list_presets()),
+      help="Provider command preset to execute for each role.",
+    )
     workflow_parser.add_argument("--timeout", type=int, default=900, help="Agent command timeout in seconds.")
     workflow_parser.add_argument(
       "--no-prompts",
@@ -96,6 +110,13 @@ def handle_list(_: argparse.Namespace) -> int:
   return 0
 
 
+def handle_presets(_: argparse.Namespace) -> int:
+  for preset in list_presets():
+    print(f"{preset.name}: {preset.command}")
+    print(f"  {preset.description}")
+  return 0
+
+
 def handle_workflow(args: argparse.Namespace) -> int:
   if args.run and args.dry_run:
     raise SystemExit("Use either --run or --dry-run, not both.")
@@ -105,6 +126,7 @@ def handle_workflow(args: argparse.Namespace) -> int:
     context,
     run=args.run,
     agent_command=args.agent_command,
+    preset=args.preset,
     timeout=args.timeout,
   )
   print_results(results, show_prompts=not args.no_prompts)
@@ -119,4 +141,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
   raise SystemExit(main())
-

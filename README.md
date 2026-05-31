@@ -27,6 +27,7 @@ improve the maintenance process.
 - Provider-neutral CLI with dry-run mode by default
 - Built-in workflows for `triage`, `review`, `release`, and `audit`
 - Role prompts for research, execution planning, memory/context, and audit
+- Codex CLI provider presets for OpenAI-compatible maintainer workflows
 - GitHub issue and pull request templates for maintainer workflows
 - No runtime dependencies outside Python standard library
 - Tests and GitHub Actions CI
@@ -65,7 +66,15 @@ stdin:
 ```bash
 maintainer-agent triage examples/issue.md \
   --run \
-  --agent-command "codex exec"
+  --agent-command "codex exec -"
+```
+
+You can also use a built-in Codex preset:
+
+```bash
+maintainer-agent review examples/pr-review.md \
+  --run \
+  --preset codex-read-only
 ```
 
 Commands may also use a `{prompt}` placeholder when the provider expects the
@@ -124,6 +133,7 @@ Prompts are supplied by stdin unless you opt into a `{prompt}` placeholder.
 Before using this on a real repository, review:
 
 - [Publication checklist](docs/PUBLICATION_CHECKLIST.md)
+- [Provider presets](docs/PROVIDERS.md)
 - [Publishing guide](docs/PUBLISHING.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Security policy](SECURITY.md)

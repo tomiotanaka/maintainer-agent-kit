@@ -6,10 +6,15 @@
 - Prompt files for research, execution planning, memory, and audit.
 - Tests, CI, examples, security policy, issue templates, and PR template.
 
+## v0.1.1
+
+- Codex CLI provider presets for OpenAI-compatible maintainer workflows.
+- Provider preset documentation.
+- Tests for preset listing and safe command selection.
+
 ## v0.2.0
 
 - GitHub issue and pull request import helpers.
-- Provider presets for OpenAI-compatible tools while keeping dry-run as default.
 - Golden-output tests for common triage and review cases.
 
 ## v0.3.0
@@ -23,4 +28,3 @@
 - Stable workflow config format.
 - Documented maintainer playbooks.
 - Compatibility tests for supported provider command presets.
-

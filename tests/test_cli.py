@@ -4,6 +4,7 @@ import unittest
 from contextlib import redirect_stdout
 
 from maintainer_agent_kit.cli import main, run_workflow
+from maintainer_agent_kit.presets import get_preset
 from maintainer_agent_kit.runner import run_agent_command
 
 
@@ -16,6 +17,14 @@ class CliTests(unittest.TestCase):
     self.assertIn("triage", output.getvalue())
     self.assertIn("review", output.getvalue())
 
+  def test_presets_command_prints_codex_presets(self):
+    output = io.StringIO()
+    with redirect_stdout(output):
+      exit_code = main(["presets"])
+    self.assertEqual(exit_code, 0)
+    self.assertIn("codex-read-only", output.getvalue())
+    self.assertIn("codex exec", output.getvalue())
+
   def test_dry_run_does_not_require_agent_command(self):
     results = run_workflow(
       "audit",
@@ -27,6 +36,21 @@ class CliTests(unittest.TestCase):
     self.assertEqual(len(results), 1)
     self.assertEqual(results[0].output, "DRY RUN: prompt preview only")
     self.assertIsNone(results[0].returncode)
+
+  def test_codex_preset_is_stdin_based(self):
+    preset = get_preset("codex")
+    self.assertEqual(preset.command, "codex exec -")
+
+  def test_agent_command_and_preset_are_mutually_exclusive(self):
+    with self.assertRaisesRegex(SystemExit, "either --agent-command or --preset"):
+      run_workflow(
+        "audit",
+        "Check command selection.",
+        run=True,
+        agent_command="cat",
+        preset="codex",
+        timeout=1,
+      )
 
   def test_run_uses_stdin_command(self):
     results = run_workflow(
