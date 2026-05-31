@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0 - 2026-05-31
+
+- Added GitHub issue and pull request import helpers.
+- Added synthetic GitHub JSON fixtures and importer tests.
+- Added GitHub import, demo, and Codex usage documentation.
+
 ## 0.1.2 - 2026-05-31
 
 - Added golden prompt snapshots for issue triage and pull request review.

@@ -1,0 +1,18 @@
+{
+  "number": 42,
+  "title": "Crash when importing large JSON",
+  "html_url": "https://github.com/example/project/issues/42",
+  "state": "open",
+  "user": {
+    "login": "reporter"
+  },
+  "labels": [
+    {
+      "name": "bug"
+    },
+    {
+      "name": "needs-repro"
+    }
+  ],
+  "body": "Importing a 75 MB JSON file exits without an error message. Expected either a successful import or a clear validation error."
+}

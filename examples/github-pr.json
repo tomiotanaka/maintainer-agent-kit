@@ -1,0 +1,24 @@
+{
+  "number": 17,
+  "title": "Retry authentication refresh",
+  "html_url": "https://github.com/example/project/pull/17",
+  "state": "open",
+  "user": {
+    "login": "contributor"
+  },
+  "base": {
+    "ref": "main",
+    "repo": {
+      "full_name": "example/project"
+    }
+  },
+  "head": {
+    "ref": "auth-retry",
+    "repo": {
+      "full_name": "contributor/project"
+    }
+  },
+  "additions": 120,
+  "deletions": 18,
+  "body": "Adds retry handling around token refresh and raises the timeout from 5 seconds to 30 seconds."
+}

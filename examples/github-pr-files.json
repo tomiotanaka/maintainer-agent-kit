@@ -1,0 +1,16 @@
+[
+  {
+    "filename": "src/auth.py",
+    "status": "modified",
+    "additions": 90,
+    "deletions": 12,
+    "changes": 102
+  },
+  {
+    "filename": "tests/test_auth.py",
+    "status": "modified",
+    "additions": 30,
+    "deletions": 6,
+    "changes": 36
+  }
+]

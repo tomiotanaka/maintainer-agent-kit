@@ -20,6 +20,8 @@
 ## v0.2.0
 
 - GitHub issue and pull request import helpers.
+- Synthetic importer fixtures and tests.
+- Demo documentation for the issue triage and PR review loop.
 
 ## v0.3.0
 

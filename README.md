@@ -27,6 +27,7 @@ improve the maintenance process.
 - Provider-neutral CLI with dry-run mode by default
 - Built-in workflows for `triage`, `review`, `release`, and `audit`
 - Role prompts for research, execution planning, memory/context, and audit
+- GitHub issue and pull request import helpers for local Markdown workflow input
 - Codex CLI provider presets for OpenAI-compatible maintainer workflows
 - Golden prompt tests for triage and review workflows
 - GitHub issue and pull request templates for maintainer workflows
@@ -60,6 +61,14 @@ maintainer-agent triage examples/issue.md --dry-run
 
 Dry-run mode prints the prompts that would be sent to each role. Nothing leaves
 your machine.
+
+To convert synthetic GitHub issue or pull request JSON into workflow input:
+
+```bash
+maintainer-agent import-github issue examples/github-issue.json \
+  --output /tmp/imported-issue.md
+maintainer-agent triage /tmp/imported-issue.md --dry-run
+```
 
 To run an agent command, pass `--run` and a command that accepts the prompt on
 stdin:
@@ -135,7 +144,10 @@ Before using this on a real repository, review:
 
 - [Publication checklist](docs/PUBLICATION_CHECKLIST.md)
 - [Provider presets](docs/PROVIDERS.md)
+- [GitHub import helpers](docs/GITHUB_IMPORT.md)
 - [Evaluation](docs/EVALUATION.md)
+- [Demo](docs/DEMO.md)
+- [Codex usage example](docs/CODEX_USAGE_EXAMPLE.md)
 - [Publishing guide](docs/PUBLISHING.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Security policy](SECURITY.md)
@@ -143,6 +155,6 @@ Before using this on a real repository, review:
 
 ## Project status
 
-This is an early public-ready seed. The immediate roadmap is to add GitHub issue
-and pull request import helpers, provider presets, and golden-output tests for
-common maintainer tasks.
+This is an early public-ready seed. The current focus is repeatable, auditable
+maintainer workflows: GitHub context import, dry-run prompt previews, provider
+presets, and golden-output tests for common maintainer tasks.

@@ -4,6 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from .github_import import load_json, render_issue_markdown, render_pull_request_markdown, write_markdown
 from .presets import get_preset, list_presets
 from .runner import AgentResult, run_agent_command
 from .workflows import build_prompt, get_workflow, list_workflows
@@ -77,6 +78,20 @@ def build_parser() -> argparse.ArgumentParser:
   presets_parser = subparsers.add_parser("presets", help="List provider command presets.")
   presets_parser.set_defaults(handler=handle_presets)
 
+  import_parser = subparsers.add_parser("import-github", help="Convert GitHub JSON into workflow input Markdown.")
+  import_subparsers = import_parser.add_subparsers(dest="import_type", required=True)
+
+  issue_parser = import_subparsers.add_parser("issue", help="Convert a GitHub issue JSON file for triage.")
+  issue_parser.add_argument("input", help="GitHub issue JSON file.")
+  issue_parser.add_argument("-o", "--output", required=True, help="Markdown file to write.")
+  issue_parser.set_defaults(handler=handle_import_issue)
+
+  pr_parser = import_subparsers.add_parser("pr", help="Convert a GitHub pull request JSON file for review.")
+  pr_parser.add_argument("input", help="GitHub pull request JSON file.")
+  pr_parser.add_argument("--files", help="Optional GitHub pull request files JSON file.")
+  pr_parser.add_argument("-o", "--output", required=True, help="Markdown file to write.")
+  pr_parser.set_defaults(handler=handle_import_pr)
+
   for workflow in list_workflows():
     workflow_parser = subparsers.add_parser(workflow.name, help=workflow.summary)
     workflow_parser.add_argument("context", nargs="?", help="Markdown/text context file.")
@@ -114,6 +129,32 @@ def handle_presets(_: argparse.Namespace) -> int:
   for preset in list_presets():
     print(f"{preset.name}: {preset.command}")
     print(f"  {preset.description}")
+  return 0
+
+
+def handle_import_issue(args: argparse.Namespace) -> int:
+  issue = load_json(args.input)
+  if not isinstance(issue, dict):
+    raise SystemExit("GitHub issue input must be a JSON object.")
+  write_markdown(args.output, render_issue_markdown(issue))
+  print(f"Wrote {args.output}")
+  return 0
+
+
+def handle_import_pr(args: argparse.Namespace) -> int:
+  pr = load_json(args.input)
+  if not isinstance(pr, dict):
+    raise SystemExit("GitHub pull request input must be a JSON object.")
+  files = None
+  if args.files:
+    files_json = load_json(args.files)
+    if not isinstance(files_json, list):
+      raise SystemExit("GitHub pull request files input must be a JSON array.")
+    if any(not isinstance(file_info, dict) for file_info in files_json):
+      raise SystemExit("GitHub pull request files input must contain JSON objects.")
+    files = files_json
+  write_markdown(args.output, render_pull_request_markdown(pr, files))
+  print(f"Wrote {args.output}")
   return 0
 
 
