@@ -100,24 +100,19 @@ def get_workflow(name: str) -> Workflow:
 
 
 def build_prompt(workflow: Workflow, role: Role, task_context: str) -> str:
-  return dedent(
-    f"""
-    # Workflow
-    {workflow.name}: {workflow.summary}
-
-    # Role
-    {role.name}: {role.purpose}
-
-    # Role Instructions
-    {role.prompt}
-
-    # Shared Rules
-    {COMMON_RULES}
-
-    # Task Context
-    {task_context.strip()}
-
-    # Required Output
-    Return concrete maintainer-facing output for the role above.
-    """
-  ).strip()
+  return "\n\n".join(
+    (
+      "# Workflow",
+      f"{workflow.name}: {workflow.summary}",
+      "# Role",
+      f"{role.name}: {role.purpose}",
+      "# Role Instructions",
+      role.prompt,
+      "# Shared Rules",
+      COMMON_RULES,
+      "# Task Context",
+      task_context.strip(),
+      "# Required Output",
+      "Return concrete maintainer-facing output for the role above.",
+    )
+  )

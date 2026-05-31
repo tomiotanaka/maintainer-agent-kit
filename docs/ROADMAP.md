@@ -12,10 +12,14 @@
 - Provider preset documentation.
 - Tests for preset listing and safe command selection.
 
+## v0.1.2
+
+- Golden prompt tests for issue triage and pull request review workflows.
+- Evaluation documentation for reviewing prompt changes.
+
 ## v0.2.0
 
 - GitHub issue and pull request import helpers.
-- Golden-output tests for common triage and review cases.
 
 ## v0.3.0
 

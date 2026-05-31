@@ -28,6 +28,7 @@ improve the maintenance process.
 - Built-in workflows for `triage`, `review`, `release`, and `audit`
 - Role prompts for research, execution planning, memory/context, and audit
 - Codex CLI provider presets for OpenAI-compatible maintainer workflows
+- Golden prompt tests for triage and review workflows
 - GitHub issue and pull request templates for maintainer workflows
 - No runtime dependencies outside Python standard library
 - Tests and GitHub Actions CI
@@ -134,6 +135,7 @@ Before using this on a real repository, review:
 
 - [Publication checklist](docs/PUBLICATION_CHECKLIST.md)
 - [Provider presets](docs/PROVIDERS.md)
+- [Evaluation](docs/EVALUATION.md)
 - [Publishing guide](docs/PUBLISHING.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Security policy](SECURITY.md)

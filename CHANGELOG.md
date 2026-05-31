@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 - 2026-05-31
+
+- Added golden prompt snapshots for issue triage and pull request review.
+- Added evaluation documentation for prompt changes.
+- Added safety-rule checks for golden workflow prompts.
+
 ## 0.1.1 - 2026-05-31
 
 - Added Codex CLI provider presets.
