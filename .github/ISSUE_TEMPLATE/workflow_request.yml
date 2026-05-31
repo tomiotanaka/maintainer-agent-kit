@@ -1,0 +1,25 @@
+name: Workflow request
+description: Propose a maintainer workflow, prompt, or audit check.
+title: "[Workflow]: "
+labels: ["enhancement", "workflow"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Maintainer problem
+      description: What repeated maintainer task should this help with?
+    validations:
+      required: true
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Proposed workflow
+      description: Describe the roles, inputs, and expected output.
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Safety and review notes
+      description: What should the workflow avoid doing automatically?
+
