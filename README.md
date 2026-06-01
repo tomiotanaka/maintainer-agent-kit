@@ -29,7 +29,7 @@ improve the maintenance process.
 - Role prompts for research, execution planning, memory/context, and audit
 - GitHub issue and pull request import helpers for local Markdown workflow input
 - Codex CLI provider presets for OpenAI-compatible maintainer workflows
-- Golden prompt tests for triage and review workflows
+- Golden prompt tests for triage, review, and release workflows
 - GitHub issue and pull request templates for maintainer workflows
 - No runtime dependencies outside Python standard library
 - Tests and GitHub Actions CI
@@ -157,4 +157,5 @@ Before using this on a real repository, review:
 
 This is an early public-ready seed. The current focus is repeatable, auditable
 maintainer workflows: GitHub context import, dry-run prompt previews, provider
-presets, and golden-output tests for common maintainer tasks.
+presets, and golden-output tests for common maintainer tasks, including release
+checks for changelog coverage and publication blockers.

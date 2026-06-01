@@ -17,6 +17,10 @@ CASES = {
     "context": "pr_review.md",
     "roles": ("research", "executor", "audit"),
   },
+  "release": {
+    "context": "release_notes.md",
+    "roles": ("research", "executor", "audit"),
+  },
 }
 
 REQUIRED_SAFETY_FRAGMENTS = (
@@ -24,6 +28,13 @@ REQUIRED_SAFETY_FRAGMENTS = (
   "Do not invent facts that are not present in the task context.",
   "Prefer actionable checks over generic advice.",
   "Call out missing evidence and verification gaps.",
+)
+
+RELEASE_REQUIRED_FRAGMENTS = (
+  "changelog coverage",
+  "migration notes",
+  "publication blockers",
+  "verification steps",
 )
 
 
@@ -54,7 +65,15 @@ class GoldenPromptTests(unittest.TestCase):
           for fragment in REQUIRED_SAFETY_FRAGMENTS:
             self.assertIn(fragment, prompt)
 
+  def test_release_prompts_keep_release_checks(self):
+    workflow = get_workflow("release")
+    context = (CONTEXTS / CASES["release"]["context"]).read_text(encoding="utf-8")
+    for role in workflow.roles:
+      with self.subTest(role=role.name):
+        prompt = build_prompt(workflow, role, context)
+        for fragment in RELEASE_REQUIRED_FRAGMENTS:
+          self.assertIn(fragment, prompt)
+
 
 if __name__ == "__main__":
   unittest.main()
-

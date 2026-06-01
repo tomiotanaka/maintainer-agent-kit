@@ -23,9 +23,15 @@
 - Synthetic importer fixtures and tests.
 - Demo documentation for the issue triage and PR review loop.
 
+## v0.2.1
+
+- Release workflow golden prompt coverage.
+- Release-specific output checks for changelog coverage, migration notes,
+  publication blockers, and verification steps.
+
 ## v0.3.0
 
-- Release workflow improvements for changelog generation and migration notes.
+- Release workflow helpers for changelog generation from GitHub context.
 - Maintainer memory checklist with explicit promotion and retirement rules.
 - Security-focused audit prompts for dependency, permission, and data-flow changes.
 

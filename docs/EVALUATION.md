@@ -8,7 +8,7 @@ safety rules.
 ## Running evaluations
 
 ```bash
-PYTHONPATH=src python -m unittest discover -s tests
+PYTHONPATH=src python3 -m unittest discover -s tests
 ```
 
 ## Golden fixtures
@@ -26,6 +26,8 @@ intentional, small enough to inspect, and tied to a maintainer workflow goal.
 
 - Issue triage workflow: research, executor, memory, audit.
 - Pull request review workflow: research, executor, audit.
+- Release workflow: research, executor, audit, with release-specific checks for
+  changelog coverage, migration notes, publication blockers, and verification
+  steps.
 - Shared safety rules: untrusted input, no invented facts, actionable checks,
   missing evidence, and verification gaps.
-

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1 - 2026-06-01
+
+- Added release workflow golden prompt snapshots.
+- Added release prompt checks for changelog coverage, migration notes,
+  publication blockers, and verification steps.
+- Documented release workflow evaluation coverage.
+
 ## 0.2.0 - 2026-05-31
 
 - Added GitHub issue and pull request import helpers.

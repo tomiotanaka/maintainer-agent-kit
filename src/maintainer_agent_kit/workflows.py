@@ -17,6 +17,7 @@ class Workflow:
   name: str
   summary: str
   roles: tuple[Role, ...]
+  required_output: str = "Return concrete maintainer-facing output for the role above."
 
 
 COMMON_RULES = dedent(
@@ -78,6 +79,10 @@ WORKFLOWS: dict[str, Workflow] = {
     name="release",
     summary="Draft release notes and release checks.",
     roles=(RESEARCH, EXECUTOR, AUDIT),
+    required_output=(
+      "Return release-facing output with changelog coverage, migration notes, "
+      "publication blockers, and verification steps."
+    ),
   ),
   "audit": Workflow(
     name="audit",
@@ -113,6 +118,6 @@ def build_prompt(workflow: Workflow, role: Role, task_context: str) -> str:
       "# Task Context",
       task_context.strip(),
       "# Required Output",
-      "Return concrete maintainer-facing output for the role above.",
+      workflow.required_output,
     )
   )
