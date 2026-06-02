@@ -66,3 +66,26 @@ maintainer-agent review /tmp/imported-pr.md \
 
 The dry-run preview is the default. The Codex command only runs when `--run` is
 explicitly supplied by the maintainer.
+
+## 5. Try practical maintainer checklist examples
+
+The repository includes synthetic examples for a small library issue, a CLI tool
+pull request, web app release preparation, and final audit:
+
+```bash
+maintainer-agent triage examples/maintainer-checklists/small-library-issue.md \
+  --dry-run \
+  --no-prompts
+maintainer-agent review examples/maintainer-checklists/cli-tool-pr.md \
+  --dry-run \
+  --no-prompts
+maintainer-agent release examples/maintainer-checklists/web-app-release.md \
+  --dry-run \
+  --no-prompts
+maintainer-agent audit examples/maintainer-checklists/web-app-final-audit.md \
+  --dry-run \
+  --no-prompts
+```
+
+See [Maintainer checklist examples](MAINTAINER_CHECKLIST_EXAMPLES.md) for
+the scenario-specific review checklists and expected dry-run output shape.

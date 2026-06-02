@@ -29,6 +29,12 @@
 - Release-specific output checks for changelog coverage, migration notes,
   publication blockers, and verification steps.
 
+## v0.2.2
+
+- Practical maintainer checklist examples for issue triage, pull request review,
+  release preparation, and final audit.
+- Dry-run tests that keep example workflow inputs executable.
+
 ## v0.3.0
 
 - Release workflow helpers for changelog generation from GitHub context.

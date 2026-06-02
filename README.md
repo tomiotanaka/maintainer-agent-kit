@@ -30,6 +30,7 @@ improve the maintenance process.
 - GitHub issue and pull request import helpers for local Markdown workflow input
 - Codex CLI provider presets for OpenAI-compatible maintainer workflows
 - Golden prompt tests for triage, review, and release workflows
+- Synthetic maintainer checklist examples for library, CLI, and web app workflows
 - GitHub issue and pull request templates for maintainer workflows
 - No runtime dependencies outside Python standard library
 - Tests and GitHub Actions CI
@@ -147,6 +148,7 @@ Before using this on a real repository, review:
 - [GitHub import helpers](docs/GITHUB_IMPORT.md)
 - [Evaluation](docs/EVALUATION.md)
 - [Demo](docs/DEMO.md)
+- [Maintainer checklist examples](docs/MAINTAINER_CHECKLIST_EXAMPLES.md)
 - [Codex usage example](docs/CODEX_USAGE_EXAMPLE.md)
 - [Publishing guide](docs/PUBLISHING.md)
 - [Roadmap](docs/ROADMAP.md)
@@ -158,4 +160,5 @@ Before using this on a real repository, review:
 This is an early public-ready seed. The current focus is repeatable, auditable
 maintainer workflows: GitHub context import, dry-run prompt previews, provider
 presets, and golden-output tests for common maintainer tasks, including release
-checks for changelog coverage and publication blockers.
+checks for changelog coverage, publication blockers, and practical checklist
+examples.

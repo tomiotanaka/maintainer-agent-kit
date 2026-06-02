@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.2 - 2026-06-02
+
+- Added synthetic maintainer checklist examples for small library, CLI tool,
+  and web app maintenance scenarios.
+- Added dry-run coverage tests for the checklist example files.
+- Linked practical checklist examples from the README and demo documentation.
+
 ## 0.2.1 - 2026-06-01
 
 - Added release workflow golden prompt snapshots.
