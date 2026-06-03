@@ -1,10 +1,18 @@
 from __future__ import annotations
 
 import argparse
+import shlex
 import sys
 from pathlib import Path
 
-from .github_import import load_json, render_issue_markdown, render_pull_request_markdown, write_markdown
+from .github_import import (
+  fetch_issue_with_gh,
+  fetch_pull_request_with_gh,
+  load_json,
+  render_issue_markdown,
+  render_pull_request_markdown,
+  write_markdown,
+)
 from .presets import get_preset, list_presets
 from .runner import AgentResult, run_agent_command
 from .workflows import build_prompt, get_workflow, list_workflows
@@ -86,11 +94,36 @@ def build_parser() -> argparse.ArgumentParser:
   issue_parser.add_argument("-o", "--output", required=True, help="Markdown file to write.")
   issue_parser.set_defaults(handler=handle_import_issue)
 
+  issue_url_parser = import_subparsers.add_parser("issue-url", help="Fetch a GitHub issue URL with gh for triage.")
+  issue_url_parser.add_argument("url", help="GitHub issue URL, such as https://github.com/owner/repo/issues/42.")
+  issue_url_parser.add_argument("-o", "--output", required=True, help="Markdown file to write.")
+  issue_url_parser.add_argument(
+    "--use-gh",
+    action="store_true",
+    help="Allow this command to shell out to GitHub CLI. Required for URL imports.",
+  )
+  issue_url_parser.set_defaults(handler=handle_import_issue_url)
+
   pr_parser = import_subparsers.add_parser("pr", help="Convert a GitHub pull request JSON file for review.")
   pr_parser.add_argument("input", help="GitHub pull request JSON file.")
   pr_parser.add_argument("--files", help="Optional GitHub pull request files JSON file.")
   pr_parser.add_argument("-o", "--output", required=True, help="Markdown file to write.")
   pr_parser.set_defaults(handler=handle_import_pr)
+
+  pr_url_parser = import_subparsers.add_parser("pr-url", help="Fetch a GitHub pull request URL with gh for review.")
+  pr_url_parser.add_argument("url", help="GitHub pull request URL, such as https://github.com/owner/repo/pull/17.")
+  pr_url_parser.add_argument("-o", "--output", required=True, help="Markdown file to write.")
+  pr_url_parser.add_argument(
+    "--use-gh",
+    action="store_true",
+    help="Allow this command to shell out to GitHub CLI. Required for URL imports.",
+  )
+  pr_url_parser.add_argument(
+    "--no-files",
+    action="store_true",
+    help="Do not fetch changed-file metadata for the pull request.",
+  )
+  pr_url_parser.set_defaults(handler=handle_import_pr_url)
 
   for workflow in list_workflows():
     workflow_parser = subparsers.add_parser(workflow.name, help=workflow.summary)
@@ -137,7 +170,15 @@ def handle_import_issue(args: argparse.Namespace) -> int:
   if not isinstance(issue, dict):
     raise SystemExit("GitHub issue input must be a JSON object.")
   write_markdown(args.output, render_issue_markdown(issue))
-  print(f"Wrote {args.output}")
+  print_import_next_step(args.output, "triage")
+  return 0
+
+
+def handle_import_issue_url(args: argparse.Namespace) -> int:
+  require_gh_opt_in(args)
+  issue = fetch_issue_with_gh(args.url)
+  write_markdown(args.output, render_issue_markdown(issue))
+  print_import_next_step(args.output, "triage")
   return 0
 
 
@@ -154,7 +195,15 @@ def handle_import_pr(args: argparse.Namespace) -> int:
       raise SystemExit("GitHub pull request files input must contain JSON objects.")
     files = files_json
   write_markdown(args.output, render_pull_request_markdown(pr, files))
-  print(f"Wrote {args.output}")
+  print_import_next_step(args.output, "review")
+  return 0
+
+
+def handle_import_pr_url(args: argparse.Namespace) -> int:
+  require_gh_opt_in(args)
+  pr, files = fetch_pull_request_with_gh(args.url, include_files=not args.no_files)
+  write_markdown(args.output, render_pull_request_markdown(pr, files))
+  print_import_next_step(args.output, "review")
   return 0
 
 
@@ -172,6 +221,16 @@ def handle_workflow(args: argparse.Namespace) -> int:
   )
   print_results(results, show_prompts=not args.no_prompts)
   return 0
+
+
+def require_gh_opt_in(args: argparse.Namespace) -> None:
+  if not args.use_gh:
+    raise SystemExit("URL import shells out to GitHub CLI. Pass --use-gh to opt in, or import a local JSON file.")
+
+
+def print_import_next_step(output: str, workflow: str) -> None:
+  print(f"Wrote {output}")
+  print(f"Next: maintainer-agent {workflow} {shlex.quote(str(output))} --dry-run")
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -15,6 +15,7 @@ Expected output:
 
 ```text
 Wrote /tmp/imported-issue.md
+Next: maintainer-agent triage /tmp/imported-issue.md --dry-run
 ```
 
 ## 2. Preview triage prompts
@@ -55,7 +56,20 @@ maintainer-agent import-github pr examples/github-pr.json \
   --output /tmp/imported-pr.md
 ```
 
-## 4. Run Codex in read-only mode
+Expected output:
+
+```text
+Wrote /tmp/imported-pr.md
+Next: maintainer-agent review /tmp/imported-pr.md --dry-run
+```
+
+## 4. Preview review prompts
+
+```bash
+maintainer-agent review /tmp/imported-pr.md --dry-run --no-prompts
+```
+
+## 5. Run Codex in read-only mode
 
 ```bash
 maintainer-agent review /tmp/imported-pr.md \
@@ -67,7 +81,7 @@ maintainer-agent review /tmp/imported-pr.md \
 The dry-run preview is the default. The Codex command only runs when `--run` is
 explicitly supplied by the maintainer.
 
-## 5. Try practical maintainer checklist examples
+## 6. Try practical maintainer checklist examples
 
 The repository includes synthetic examples for a small library issue, a CLI tool
 pull request, web app release preparation, and final audit:

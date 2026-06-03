@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.3 - 2026-06-03
+
+- Added explicit `gh`-backed GitHub issue and pull request URL import commands.
+- Added dry-run next-step guidance after GitHub imports.
+- Added mocked GitHub CLI tests for direct URL imports without network access.
+
 ## 0.2.2 - 2026-06-02
 
 - Added synthetic maintainer checklist examples for small library, CLI tool,

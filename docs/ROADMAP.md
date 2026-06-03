@@ -35,6 +35,12 @@
   release preparation, and final audit.
 - Dry-run tests that keep example workflow inputs executable.
 
+## v0.2.3
+
+- Direct `gh`-backed import commands for GitHub issue and pull request URLs.
+- Explicit opt-in before shelling out to GitHub CLI.
+- Dry-run next-step guidance after import so maintainers inspect prompts first.
+
 ## v0.3.0
 
 - Release workflow helpers for changelog generation from GitHub context.

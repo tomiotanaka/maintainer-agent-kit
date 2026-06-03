@@ -1,11 +1,23 @@
 from __future__ import annotations
 
 import json
+import subprocess
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 
 JsonObject = dict[str, Any]
+ISSUE_GH_FIELDS = "number,title,url,state,author,labels,body"
+PR_GH_FIELDS = "number,title,url,state,author,baseRefName,headRefName,additions,deletions,body"
+
+
+@dataclass(frozen=True)
+class GitHubUrl:
+  kind: str
+  repo: str
+  number: int
 
 
 def load_json(path: str | Path) -> JsonObject | list[JsonObject]:
@@ -23,6 +35,57 @@ def write_markdown(path: str | Path, content: str) -> None:
   output_path = Path(path)
   output_path.parent.mkdir(parents=True, exist_ok=True)
   output_path.write_text(content.rstrip() + "\n", encoding="utf-8")
+
+
+def parse_github_url(url: str, *, expected_kind: str | None = None) -> GitHubUrl:
+  parsed = urlparse(url)
+  if parsed.scheme != "https" or parsed.netloc.lower() != "github.com":
+    raise SystemExit("GitHub URL must be an https://github.com/owner/repo/issues/N or /pull/N URL.")
+
+  parts = [part for part in parsed.path.split("/") if part]
+  if len(parts) < 4:
+    raise SystemExit("GitHub URL must include owner, repo, issue/pull path, and number.")
+
+  owner, repo_name, resource, number_text = parts[:4]
+  kind_by_resource = {"issues": "issue", "pull": "pr"}
+  kind = kind_by_resource.get(resource)
+  if kind is None:
+    raise SystemExit("GitHub URL must point to an issue or pull request.")
+  if expected_kind is not None and kind != expected_kind:
+    raise SystemExit(f"Expected a GitHub {expected_kind} URL, got a {kind} URL.")
+
+  try:
+    number = int(number_text)
+  except ValueError as exc:
+    raise SystemExit("GitHub issue or pull request number must be an integer.") from exc
+  if number <= 0:
+    raise SystemExit("GitHub issue or pull request number must be positive.")
+
+  return GitHubUrl(kind=kind, repo=f"{owner}/{repo_name}", number=number)
+
+
+def fetch_issue_with_gh(url: str) -> JsonObject:
+  github_url = parse_github_url(url, expected_kind="issue")
+  data = _run_gh_json(["issue", "view", str(github_url.number), "--repo", github_url.repo, "--json", ISSUE_GH_FIELDS])
+  if not isinstance(data, dict):
+    raise SystemExit("GitHub CLI issue output must be a JSON object.")
+  return data
+
+
+def fetch_pull_request_with_gh(url: str, *, include_files: bool = True) -> tuple[JsonObject, list[JsonObject] | None]:
+  github_url = parse_github_url(url, expected_kind="pr")
+  pr = _run_gh_json(["pr", "view", str(github_url.number), "--repo", github_url.repo, "--json", PR_GH_FIELDS])
+  if not isinstance(pr, dict):
+    raise SystemExit("GitHub CLI pull request output must be a JSON object.")
+  files = None
+  if include_files:
+    files_json = _run_gh_json(["pr", "view", str(github_url.number), "--repo", github_url.repo, "--json", "files", "--jq", ".files"])
+    if not isinstance(files_json, list):
+      raise SystemExit("GitHub CLI pull request files output must be a JSON array.")
+    if any(not isinstance(file_info, dict) for file_info in files_json):
+      raise SystemExit("GitHub CLI pull request files output must contain JSON objects.")
+    files = files_json
+  return pr, files
 
 
 def render_issue_markdown(issue: JsonObject) -> str:
@@ -165,3 +228,26 @@ def _number(value: Any, default: int) -> int:
   if isinstance(value, int):
     return value
   return default
+
+
+def _run_gh_json(args: list[str]) -> Any:
+  command = ["gh", *args]
+  try:
+    completed = subprocess.run(
+      command,
+      check=False,
+      encoding="utf-8",
+      stderr=subprocess.PIPE,
+      stdout=subprocess.PIPE,
+    )
+  except FileNotFoundError as exc:
+    raise SystemExit("GitHub CLI executable 'gh' was not found. Install gh or use local JSON import.") from exc
+
+  if completed.returncode != 0:
+    error = completed.stderr.strip() or "no error output"
+    raise SystemExit(f"GitHub CLI failed: {' '.join(command)}\n{error}")
+
+  try:
+    return json.loads(completed.stdout)
+  except json.JSONDecodeError as exc:
+    raise SystemExit(f"GitHub CLI returned invalid JSON: {exc}") from exc

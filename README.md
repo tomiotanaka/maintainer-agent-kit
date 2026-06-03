@@ -27,7 +27,7 @@ improve the maintenance process.
 - Provider-neutral CLI with dry-run mode by default
 - Built-in workflows for `triage`, `review`, `release`, and `audit`
 - Role prompts for research, execution planning, memory/context, and audit
-- GitHub issue and pull request import helpers for local Markdown workflow input
+- GitHub issue and pull request import helpers for JSON files or explicit `gh` URL fetches
 - Codex CLI provider presets for OpenAI-compatible maintainer workflows
 - Golden prompt tests for triage, review, and release workflows
 - Synthetic maintainer checklist examples for library, CLI, and web app workflows
@@ -67,6 +67,15 @@ To convert synthetic GitHub issue or pull request JSON into workflow input:
 
 ```bash
 maintainer-agent import-github issue examples/github-issue.json \
+  --output /tmp/imported-issue.md
+maintainer-agent triage /tmp/imported-issue.md --dry-run
+```
+
+To fetch a live GitHub URL through GitHub CLI, opt in explicitly:
+
+```bash
+maintainer-agent import-github issue-url https://github.com/owner/project/issues/42 \
+  --use-gh \
   --output /tmp/imported-issue.md
 maintainer-agent triage /tmp/imported-issue.md --dry-run
 ```
@@ -161,4 +170,5 @@ This is an early public-ready seed. The current focus is repeatable, auditable
 maintainer workflows: GitHub context import, dry-run prompt previews, provider
 presets, and golden-output tests for common maintainer tasks, including release
 checks for changelog coverage, publication blockers, and practical checklist
-examples.
+examples. Live GitHub URL imports require an explicit `--use-gh` opt-in and keep
+the next step as a local dry-run prompt preview.
