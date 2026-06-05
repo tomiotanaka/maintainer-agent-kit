@@ -9,6 +9,7 @@ from maintainer_agent_kit.cli import main
 REPO_ROOT = Path(__file__).resolve().parents[1]
 EXAMPLE_ROOT = REPO_ROOT / "examples" / "maintainer-checklists"
 DOC_PATH = REPO_ROOT / "docs" / "MAINTAINER_CHECKLIST_EXAMPLES.md"
+PUBLIC_LOG_PATH = REPO_ROOT / "docs" / "PUBLIC_MAINTENANCE_LOG.md"
 
 EXAMPLE_CASES = (
   ("triage", "small-library-issue.md", ("research", "executor", "memory", "audit")),
@@ -24,6 +25,26 @@ class DocsExampleTests(unittest.TestCase):
     demo = (REPO_ROOT / "docs" / "DEMO.md").read_text(encoding="utf-8")
     self.assertIn("docs/MAINTAINER_CHECKLIST_EXAMPLES.md", readme)
     self.assertIn("MAINTAINER_CHECKLIST_EXAMPLES.md", demo)
+
+  def test_public_maintenance_log_is_linked(self):
+    readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+    demo = (REPO_ROOT / "docs" / "DEMO.md").read_text(encoding="utf-8")
+    self.assertIn("docs/PUBLIC_MAINTENANCE_LOG.md", readme)
+    self.assertIn("PUBLIC_MAINTENANCE_LOG.md", demo)
+
+  def test_public_maintenance_log_keeps_public_evidence_links(self):
+    public_log = PUBLIC_LOG_PATH.read_text(encoding="utf-8")
+    self.assertIn("https://github.com/tomiotanaka/maintainer-agent-kit/issues/4", public_log)
+    self.assertIn("https://github.com/tomiotanaka/maintainer-agent-kit/releases/tag/v0.2.3", public_log)
+    self.assertIn("https://github.com/Eskasia/smart-contract-security-assistant/issues/21", public_log)
+    self.assertIn("https://github.com/tomiotanaka/maintainer-agent-kit/actions/workflows/ci.yml", public_log)
+
+  def test_ci_workflow_keeps_compile_and_cli_smoke_checks(self):
+    ci = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    self.assertIn("workflow_dispatch", ci)
+    self.assertIn("python -m compileall -q src", ci)
+    self.assertIn("maintainer-agent list", ci)
+    self.assertIn("maintainer-agent import-github issue examples/github-issue.json", ci)
 
   def test_example_context_files_are_documented(self):
     doc = DOC_PATH.read_text(encoding="utf-8")

@@ -14,14 +14,16 @@ prompt workflows, examples, tests, releases, and issue triage process.
 OSS Maintainer Agent Kit turns common maintainer work into auditable agent
 workflows for issue triage, PR review, release notes, and final audit. Even as
 an early project, it is designed for reuse by other maintainers: provider-neutral
-CLI, dry-run safety, versioned prompts, tests, CI, security policy, and examples.
+CLI, dry-run safety, versioned prompts, tests, CI, security policy, examples,
+and a public maintenance log that records issue, release, and external OSS
+feedback loops.
 
 ## 500-character version
 
 OSS Maintainer Agent Kit helps maintainers run repeatable agent workflows for
-issue triage, PR review, release notes, and final audits. It is provider-neutral,
-dry-run by default, includes tests/CI/security docs, and keeps prompts in version
-control so OSS teams can review and improve their maintenance process.
+issue triage, PR review, releases, and audits. It is provider-neutral, dry-run by
+default, includes tests/CI/security docs, public maintenance evidence, and keeps
+prompts in version control for review.
 
 ## API credit use
 

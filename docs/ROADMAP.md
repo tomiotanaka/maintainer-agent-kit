@@ -41,6 +41,13 @@
 - Explicit opt-in before shelling out to GitHub CLI.
 - Dry-run next-step guidance after import so maintainers inspect prompts first.
 
+## v0.2.4
+
+- Public maintenance log for issue, release, CI, and external OSS feedback
+  evidence.
+- README CI status badge.
+- CI compile checks and CLI smoke checks.
+
 ## v0.3.0
 
 - Release workflow helpers for changelog generation from GitHub context.

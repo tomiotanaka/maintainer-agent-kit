@@ -1,5 +1,7 @@
 # OSS Maintainer Agent Kit
 
+[![CI](https://github.com/tomiotanaka/maintainer-agent-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/tomiotanaka/maintainer-agent-kit/actions/workflows/ci.yml)
+
 Small, auditable prompt orchestration for open-source maintainers.
 
 This repository provides a command-line workflow for turning maintainer work into
@@ -31,6 +33,7 @@ improve the maintenance process.
 - Codex CLI provider presets for OpenAI-compatible maintainer workflows
 - Golden prompt tests for triage, review, and release workflows
 - Synthetic maintainer checklist examples for library, CLI, and web app workflows
+- Public maintenance log that records real issue, release, and feedback loops
 - GitHub issue and pull request templates for maintainer workflows
 - No runtime dependencies outside Python standard library
 - Tests and GitHub Actions CI
@@ -158,6 +161,7 @@ Before using this on a real repository, review:
 - [Evaluation](docs/EVALUATION.md)
 - [Demo](docs/DEMO.md)
 - [Maintainer checklist examples](docs/MAINTAINER_CHECKLIST_EXAMPLES.md)
+- [Public maintenance log](docs/PUBLIC_MAINTENANCE_LOG.md)
 - [Codex usage example](docs/CODEX_USAGE_EXAMPLE.md)
 - [Publishing guide](docs/PUBLISHING.md)
 - [Roadmap](docs/ROADMAP.md)
@@ -170,5 +174,6 @@ This is an early public-ready seed. The current focus is repeatable, auditable
 maintainer workflows: GitHub context import, dry-run prompt previews, provider
 presets, and golden-output tests for common maintainer tasks, including release
 checks for changelog coverage, publication blockers, and practical checklist
-examples. Live GitHub URL imports require an explicit `--use-gh` opt-in and keep
-the next step as a local dry-run prompt preview.
+examples. The public maintenance log records real issue, release, and external
+OSS feedback loops. Live GitHub URL imports require an explicit `--use-gh`
+opt-in and keep the next step as a local dry-run prompt preview.

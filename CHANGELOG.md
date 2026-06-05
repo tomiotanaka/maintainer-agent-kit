@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.4 - 2026-06-05
+
+- Added a public maintenance log for issue, release, CI, and external OSS
+  feedback evidence.
+- Added a README CI badge and linked the public maintenance log.
+- Expanded CI with manual dispatch, compile checks, and CLI smoke checks.
+- Added docs tests that keep public evidence links and CI smoke commands
+  discoverable.
+
 ## 0.2.3 - 2026-06-03
 
 - Added explicit `gh`-backed GitHub issue and pull request URL import commands.

@@ -103,3 +103,15 @@ maintainer-agent audit examples/maintainer-checklists/web-app-final-audit.md \
 
 See [Maintainer checklist examples](MAINTAINER_CHECKLIST_EXAMPLES.md) for
 the scenario-specific review checklists and expected dry-run output shape.
+
+## 7. Review public maintenance evidence
+
+The public maintenance log records real issue, release, CI, and external OSS
+feedback loops that influenced this project:
+
+```bash
+maintainer-agent audit docs/PUBLIC_MAINTENANCE_LOG.md --dry-run --no-prompts
+```
+
+See [Public maintenance log](PUBLIC_MAINTENANCE_LOG.md) for the public evidence
+links and entry requirements.
