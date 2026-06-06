@@ -6,6 +6,29 @@ and synthetic or authorized examples. Do not add private repository data,
 customer logs, credentials, browser history, or unpublished vulnerability
 details.
 
+## 2026-06-06 - Local setup doctor
+
+Scope: `tomiotanaka/maintainer-agent-kit`
+
+Maintenance activity:
+
+- Added `maintainer-agent doctor` for local setup checks.
+- Kept GitHub CLI availability as a warning, not a hard failure, because dry-run
+  workflows and local JSON imports do not need `gh`.
+- Configured CI smoke coverage for the doctor command.
+
+Why it matters:
+
+Maintainers often start by trying a local checkout. A lightweight doctor command
+reduces setup ambiguity before live GitHub imports and makes the project easier
+to evaluate from a clean environment. It checks local command availability only;
+GitHub authentication and repository access remain explicit maintainer steps.
+
+Evidence:
+
+- Command: `maintainer-agent doctor`
+- CI workflow: `.github/workflows/ci.yml`
+
 ## 2026-06-05 - CI and release-readiness evidence
 
 Scope: `tomiotanaka/maintainer-agent-kit`

@@ -15,15 +15,16 @@ OSS Maintainer Agent Kit turns common maintainer work into auditable agent
 workflows for issue triage, PR review, release notes, and final audit. Even as
 an early project, it is designed for reuse by other maintainers: provider-neutral
 CLI, dry-run safety, versioned prompts, tests, CI, security policy, examples,
-and a public maintenance log that records issue, release, and external OSS
-feedback loops.
+local setup checks, and a public maintenance log that records issue, release,
+and external OSS feedback loops.
 
 ## 500-character version
 
 OSS Maintainer Agent Kit helps maintainers run repeatable agent workflows for
 issue triage, PR review, releases, and audits. It is provider-neutral, dry-run by
 default, includes tests/CI/security docs, public maintenance evidence, and keeps
-prompts in version control for review.
+prompts in version control for review. The doctor command helps maintainers
+check local setup availability before live imports.
 
 ## API credit use
 

@@ -7,6 +7,7 @@ Use this checklist before making the repository public.
 - [ ] License file is present.
 - [ ] README explains what the project does in the first screen.
 - [ ] Install and quick-start commands work from a clean checkout.
+- [ ] `maintainer-agent doctor` reports local setup status.
 - [ ] Tests pass with `python -m unittest discover -s tests`.
 - [ ] CI is configured for pull requests.
 - [ ] README links to current CI status.

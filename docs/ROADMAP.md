@@ -48,6 +48,12 @@
 - README CI status badge.
 - CI compile checks and CLI smoke checks.
 
+## v0.2.5
+
+- Local setup doctor for Python, workflow, preset, and GitHub CLI checks.
+- Doctor command configured in CI smoke checks.
+- Documentation for non-fatal `gh` warnings before live URL imports.
+
 ## v0.3.0
 
 - Release workflow helpers for changelog generation from GitHub context.

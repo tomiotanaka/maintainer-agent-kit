@@ -28,6 +28,7 @@ improve the maintenance process.
 
 - Provider-neutral CLI with dry-run mode by default
 - Built-in workflows for `triage`, `review`, `release`, and `audit`
+- `doctor` command for local setup availability checks before live GitHub imports
 - Role prompts for research, execution planning, memory/context, and audit
 - GitHub issue and pull request import helpers for JSON files or explicit `gh` URL fetches
 - Codex CLI provider presets for OpenAI-compatible maintainer workflows
@@ -60,6 +61,7 @@ flowchart LR
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install -e .
+maintainer-agent doctor
 maintainer-agent triage examples/issue.md --dry-run
 ```
 

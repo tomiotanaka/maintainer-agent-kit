@@ -5,6 +5,17 @@ Markdown files for maintainer workflows. Local JSON imports do not call GitHub,
 store tokens, or run an AI provider. Direct URL imports can shell out to GitHub
 CLI, but only when `--use-gh` is supplied.
 
+Check local setup before using live URL imports:
+
+```bash
+maintainer-agent doctor
+```
+
+The doctor command checks local `gh` availability, not GitHub authentication or
+repository access. Run `gh auth status` yourself before live URL imports when
+you need to confirm account access. Local JSON imports and dry-run workflow
+previews still work without `gh`.
+
 ## Issue triage
 
 ```bash

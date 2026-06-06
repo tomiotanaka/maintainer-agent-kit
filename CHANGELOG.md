@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.5 - 2026-06-06
+
+- Added `maintainer-agent doctor` for local setup checks.
+- Reported Python support, available workflows, provider presets, and GitHub CLI
+  availability without requiring credentials.
+- Added doctor tests and configured CI smoke coverage.
+- Documented doctor usage in the README, demo, and GitHub import guide.
+
 ## 0.2.4 - 2026-06-05
 
 - Added a public maintenance log for issue, release, CI, and external OSS

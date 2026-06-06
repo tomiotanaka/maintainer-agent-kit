@@ -5,6 +5,7 @@ import shlex
 import sys
 from pathlib import Path
 
+from .doctor import doctor_exit_code, format_doctor_checks, run_doctor_checks
 from .github_import import (
   fetch_issue_with_gh,
   fetch_pull_request_with_gh,
@@ -86,6 +87,9 @@ def build_parser() -> argparse.ArgumentParser:
   presets_parser = subparsers.add_parser("presets", help="List provider command presets.")
   presets_parser.set_defaults(handler=handle_presets)
 
+  doctor_parser = subparsers.add_parser("doctor", help="Check local maintainer-agent setup.")
+  doctor_parser.set_defaults(handler=handle_doctor)
+
   import_parser = subparsers.add_parser("import-github", help="Convert GitHub JSON into workflow input Markdown.")
   import_subparsers = import_parser.add_subparsers(dest="import_type", required=True)
 
@@ -163,6 +167,12 @@ def handle_presets(_: argparse.Namespace) -> int:
     print(f"{preset.name}: {preset.command}")
     print(f"  {preset.description}")
   return 0
+
+
+def handle_doctor(_: argparse.Namespace) -> int:
+  checks = run_doctor_checks()
+  print(format_doctor_checks(checks))
+  return doctor_exit_code(checks)
 
 
 def handle_import_issue(args: argparse.Namespace) -> int:

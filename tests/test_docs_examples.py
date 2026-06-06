@@ -29,8 +29,13 @@ class DocsExampleTests(unittest.TestCase):
   def test_public_maintenance_log_is_linked(self):
     readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
     demo = (REPO_ROOT / "docs" / "DEMO.md").read_text(encoding="utf-8")
+    github_import = (REPO_ROOT / "docs" / "GITHUB_IMPORT.md").read_text(encoding="utf-8")
     self.assertIn("docs/PUBLIC_MAINTENANCE_LOG.md", readme)
     self.assertIn("PUBLIC_MAINTENANCE_LOG.md", demo)
+    self.assertIn("maintainer-agent doctor", readme)
+    self.assertIn("maintainer-agent doctor", demo)
+    self.assertIn("maintainer-agent doctor", github_import)
+    self.assertIn("Local JSON imports and dry-run workflow", github_import)
 
   def test_public_maintenance_log_keeps_public_evidence_links(self):
     public_log = PUBLIC_LOG_PATH.read_text(encoding="utf-8")
@@ -43,6 +48,7 @@ class DocsExampleTests(unittest.TestCase):
     ci = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     self.assertIn("workflow_dispatch", ci)
     self.assertIn("python -m compileall -q src", ci)
+    self.assertIn("maintainer-agent doctor", ci)
     self.assertIn("maintainer-agent list", ci)
     self.assertIn("maintainer-agent import-github issue examples/github-issue.json", ci)
 

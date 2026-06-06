@@ -28,6 +28,7 @@ jobs:
         run: python -m compileall -q src
       - name: CLI smoke checks
         run: |
+          maintainer-agent doctor
           maintainer-agent list
           maintainer-agent triage examples/issue.md --dry-run --no-prompts
           maintainer-agent import-github issue examples/github-issue.json --output /tmp/imported-issue.md

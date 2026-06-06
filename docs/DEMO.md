@@ -4,6 +4,18 @@ This demo shows the intended maintainer loop: convert GitHub context into a
 local Markdown task, preview prompts, then optionally run Codex in a constrained
 mode.
 
+## 0. Check local setup
+
+```bash
+maintainer-agent doctor
+```
+
+Expected output includes local Python support, available workflows, provider
+presets, and whether the GitHub CLI executable is available for explicit
+`--use-gh` URL imports. It does not verify GitHub authentication or repository
+access. A missing `gh` warning is not fatal for local JSON imports or dry-run
+workflow previews.
+
 ## 1. Convert an issue to triage input
 
 ```bash
