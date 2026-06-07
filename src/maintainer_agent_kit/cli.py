@@ -5,7 +5,12 @@ import shlex
 import sys
 from pathlib import Path
 
-from .doctor import doctor_exit_code, format_doctor_checks, run_doctor_checks
+from .doctor import (
+  doctor_exit_code,
+  format_doctor_checks,
+  format_doctor_json,
+  run_doctor_checks,
+)
 from .github_import import (
   fetch_issue_with_gh,
   fetch_pull_request_with_gh,
@@ -88,6 +93,7 @@ def build_parser() -> argparse.ArgumentParser:
   presets_parser.set_defaults(handler=handle_presets)
 
   doctor_parser = subparsers.add_parser("doctor", help="Check local maintainer-agent setup.")
+  doctor_parser.add_argument("--json", action="store_true", help="Print machine-readable JSON.")
   doctor_parser.set_defaults(handler=handle_doctor)
 
   import_parser = subparsers.add_parser("import-github", help="Convert GitHub JSON into workflow input Markdown.")
@@ -169,9 +175,12 @@ def handle_presets(_: argparse.Namespace) -> int:
   return 0
 
 
-def handle_doctor(_: argparse.Namespace) -> int:
+def handle_doctor(args: argparse.Namespace) -> int:
   checks = run_doctor_checks()
-  print(format_doctor_checks(checks))
+  if args.json:
+    print(format_doctor_json(checks))
+  else:
+    print(format_doctor_checks(checks))
   return doctor_exit_code(checks)
 
 

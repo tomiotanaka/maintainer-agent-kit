@@ -54,6 +54,12 @@
 - Doctor command configured in CI smoke checks.
 - Documentation for non-fatal `gh` warnings before live URL imports.
 
+## v0.2.6
+
+- Machine-readable `maintainer-agent doctor --json` diagnostics.
+- Sanitized GitHub CLI version-check failure messages.
+- CI smoke coverage for both human-readable and JSON doctor output.
+
 ## v0.3.0
 
 - Release workflow helpers for changelog generation from GitHub context.

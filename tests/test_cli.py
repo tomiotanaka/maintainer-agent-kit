@@ -1,4 +1,5 @@
 import io
+import json
 import subprocess
 import sys
 import unittest
@@ -6,7 +7,12 @@ from contextlib import redirect_stdout
 from unittest.mock import patch
 
 from maintainer_agent_kit.cli import main, run_workflow
-from maintainer_agent_kit.doctor import DoctorCheck, doctor_exit_code, format_doctor_checks
+from maintainer_agent_kit.doctor import (
+  DoctorCheck,
+  doctor_exit_code,
+  format_doctor_checks,
+  format_doctor_json,
+)
 from maintainer_agent_kit.presets import get_preset
 from maintainer_agent_kit.runner import run_agent_command
 
@@ -54,6 +60,55 @@ class CliTests(unittest.TestCase):
     self.assertIn("[ok] github-cli: gh found (gh version 2.0.0); auth/access not checked", output.getvalue())
     self.assertEqual(run_mock.call_args.args[0], ["/usr/bin/gh", "--version"])
 
+  @patch("maintainer_agent_kit.doctor.shutil.which", return_value="/usr/bin/gh")
+  @patch("maintainer_agent_kit.doctor.subprocess.run")
+  def test_doctor_json_reports_structured_status(self, run_mock, _):
+    run_mock.return_value = subprocess.CompletedProcess(["gh"], 0, stdout="gh version 2.0.0\n", stderr="")
+
+    output = io.StringIO()
+    with redirect_stdout(output):
+      exit_code = main(["doctor", "--json"])
+
+    payload = json.loads(output.getvalue())
+    self.assertEqual(exit_code, 0)
+    self.assertEqual(payload["status"], "ok")
+    self.assertEqual(payload["next_step"], "maintainer-agent triage examples/issue.md --dry-run")
+    self.assertIn(
+      {
+        "name": "github-cli",
+        "status": "ok",
+        "detail": "gh found (gh version 2.0.0); auth/access not checked",
+      },
+      payload["checks"],
+    )
+
+  @patch("maintainer_agent_kit.doctor.shutil.which", return_value="/usr/bin/gh")
+  @patch("maintainer_agent_kit.doctor.subprocess.run")
+  def test_doctor_sanitizes_gh_version_exceptions(self, run_mock, _):
+    run_mock.side_effect = OSError("raw local path /private/tmp/gh failed")
+
+    output = io.StringIO()
+    with redirect_stdout(output):
+      exit_code = main(["doctor"])
+
+    self.assertEqual(exit_code, 0)
+    self.assertIn("[warn] github-cli: gh found, but version check failed", output.getvalue())
+    self.assertNotIn("/private/tmp/gh", output.getvalue())
+
+  @patch("maintainer_agent_kit.doctor.shutil.which", return_value="/usr/bin/gh")
+  @patch("maintainer_agent_kit.doctor.subprocess.run")
+  def test_doctor_json_sanitizes_gh_version_exceptions(self, run_mock, _):
+    run_mock.side_effect = OSError("raw local path /private/tmp/gh failed")
+
+    output = io.StringIO()
+    with redirect_stdout(output):
+      exit_code = main(["doctor", "--json"])
+
+    payload = json.loads(output.getvalue())
+    self.assertEqual(exit_code, 0)
+    self.assertEqual(payload["status"], "warn")
+    self.assertNotIn("/private/tmp/gh", output.getvalue())
+
   def test_doctor_exit_code_only_fails_on_errors(self):
     self.assertEqual(doctor_exit_code([DoctorCheck("github-cli", "warn", "missing")]), 0)
     self.assertEqual(doctor_exit_code([DoctorCheck("python", "error", "old")]), 1)
@@ -63,6 +118,11 @@ class CliTests(unittest.TestCase):
     self.assertIn("Doctor checks:", text)
     self.assertIn("[ok] python: 3.11", text)
     self.assertIn("Next: maintainer-agent triage examples/issue.md --dry-run", text)
+
+  def test_format_doctor_json_summarizes_warnings(self):
+    payload = json.loads(format_doctor_json([DoctorCheck("github-cli", "warn", "missing")]))
+    self.assertEqual(payload["status"], "warn")
+    self.assertEqual(payload["checks"][0]["name"], "github-cli")
 
   def test_dry_run_does_not_require_agent_command(self):
     results = run_workflow(

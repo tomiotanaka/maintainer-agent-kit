@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import json
 import shutil
 import subprocess
 import sys
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 from .presets import list_presets
 from .workflows import list_workflows
@@ -60,10 +61,13 @@ def check_github_cli() -> DoctorCheck:
       text=True,
       timeout=5,
     )
-  except (OSError, subprocess.TimeoutExpired) as error:
-    return DoctorCheck("github-cli", "warn", f"gh found, but version check failed: {error}")
+  except subprocess.TimeoutExpired:
+    return DoctorCheck("github-cli", "warn", "gh found, but version check timed out")
+  except OSError:
+    return DoctorCheck("github-cli", "warn", "gh found, but version check failed")
 
-  first_line = (result.stdout or result.stderr).splitlines()[0] if (result.stdout or result.stderr) else "unknown version"
+  version_output = result.stdout or result.stderr
+  first_line = version_output.splitlines()[0] if version_output else "unknown version"
   if result.returncode == 0:
     return DoctorCheck("github-cli", "ok", f"gh found ({first_line}); auth/access not checked")
   return DoctorCheck("github-cli", "warn", f"gh returned {result.returncode}: {first_line}")
@@ -76,6 +80,23 @@ def format_doctor_checks(checks: list[DoctorCheck]) -> str:
   lines.append("")
   lines.append("Next: maintainer-agent triage examples/issue.md --dry-run")
   return "\n".join(lines)
+
+
+def format_doctor_json(checks: list[DoctorCheck]) -> str:
+  payload = {
+    "status": doctor_status(checks),
+    "checks": [asdict(check) for check in checks],
+    "next_step": "maintainer-agent triage examples/issue.md --dry-run",
+  }
+  return json.dumps(payload, indent=2)
+
+
+def doctor_status(checks: list[DoctorCheck]) -> str:
+  if any(check.status == "error" for check in checks):
+    return "error"
+  if any(check.status == "warn" for check in checks):
+    return "warn"
+  return "ok"
 
 
 def doctor_exit_code(checks: list[DoctorCheck]) -> int:

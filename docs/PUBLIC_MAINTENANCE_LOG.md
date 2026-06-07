@@ -6,6 +6,30 @@ and synthetic or authorized examples. Do not add private repository data,
 customer logs, credentials, browser history, or unpublished vulnerability
 details.
 
+## 2026-06-07 - Machine-readable setup diagnostics
+
+Scope: `tomiotanaka/maintainer-agent-kit`
+
+Maintenance activity:
+
+- Added `maintainer-agent doctor --json` for machine-readable setup diagnostics.
+- Kept the human-readable doctor output unchanged for normal terminal use.
+- Sanitized GitHub CLI version-check failures so raw local exception details are
+  not printed in setup output.
+- Added CI smoke coverage for both doctor output modes.
+
+Why it matters:
+
+Maintainers need setup reports they can paste into CI logs, support issues, or
+release-readiness notes without scraping terminal text. The sanitized failure
+path keeps local machine details out of public issue conversations while still
+showing that `gh` availability needs attention.
+
+Evidence:
+
+- Command: `maintainer-agent doctor --json`
+- CI workflow: `.github/workflows/ci.yml`
+
 ## 2026-06-06 - Local setup doctor
 
 Scope: `tomiotanaka/maintainer-agent-kit`

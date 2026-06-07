@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.6 - 2026-06-07
+
+- Added `maintainer-agent doctor --json` for machine-readable setup diagnostics.
+- Sanitized GitHub CLI version-check failures so raw local exception details are
+  not printed in doctor output.
+- Added doctor JSON and exception-safety tests.
+- Configured CI smoke coverage for JSON diagnostics.
+
 ## 0.2.5 - 2026-06-06
 
 - Added `maintainer-agent doctor` for local setup checks.

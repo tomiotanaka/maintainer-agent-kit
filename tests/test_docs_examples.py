@@ -49,6 +49,7 @@ class DocsExampleTests(unittest.TestCase):
     self.assertIn("workflow_dispatch", ci)
     self.assertIn("python -m compileall -q src", ci)
     self.assertIn("maintainer-agent doctor", ci)
+    self.assertIn("maintainer-agent doctor --json", ci)
     self.assertIn("maintainer-agent list", ci)
     self.assertIn("maintainer-agent import-github issue examples/github-issue.json", ci)
 
