@@ -6,6 +6,32 @@ and synthetic or authorized examples. Do not add private repository data,
 customer logs, credentials, browser history, or unpublished vulnerability
 details.
 
+## 2026-06-08 - Strict setup readiness checks
+
+Scope: `tomiotanaka/maintainer-agent-kit`
+
+Maintenance activity:
+
+- Added `maintainer-agent doctor --strict`.
+- Kept default doctor behavior warning-tolerant for maintainers doing local
+  dry-run work without live GitHub imports.
+- Added tests that make warning exit behavior explicit for normal, strict, and
+  JSON output modes.
+- Added CI smoke coverage for `maintainer-agent doctor --json --strict`.
+
+Why it matters:
+
+Maintainers need two different setup checks: a forgiving local check for first
+checkout and a strict readiness gate before release or live GitHub import work.
+Strict mode gives maintainers that gate without changing the safer default for
+new contributors.
+
+Evidence:
+
+- Command: `maintainer-agent doctor --strict`
+- Command: `maintainer-agent doctor --json --strict`
+- CI workflow: `.github/workflows/ci.yml`
+
 ## 2026-06-07 - Machine-readable setup diagnostics
 
 Scope: `tomiotanaka/maintainer-agent-kit`

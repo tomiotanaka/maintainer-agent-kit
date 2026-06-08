@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.7 - 2026-06-08
+
+- Added `maintainer-agent doctor --strict` so setup warnings can fail release or
+  CI readiness checks when maintainers opt in.
+- Kept default doctor behavior warning-tolerant for local dry-run workflows.
+- Added strict-mode tests for human-readable and JSON doctor output.
+- Configured CI smoke coverage for `doctor --json --strict`.
+
 ## 0.2.6 - 2026-06-07
 
 - Added `maintainer-agent doctor --json` for machine-readable setup diagnostics.

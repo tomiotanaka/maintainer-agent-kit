@@ -60,6 +60,12 @@
 - Sanitized GitHub CLI version-check failure messages.
 - CI smoke coverage for both human-readable and JSON doctor output.
 
+## v0.2.7
+
+- Strict doctor mode for release-readiness checks that should fail on warnings.
+- Strict-mode tests for both terminal and JSON output.
+- CI smoke coverage for `maintainer-agent doctor --json --strict`.
+
 ## v0.3.0
 
 - Release workflow helpers for changelog generation from GitHub context.

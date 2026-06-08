@@ -99,5 +99,6 @@ def doctor_status(checks: list[DoctorCheck]) -> str:
   return "ok"
 
 
-def doctor_exit_code(checks: list[DoctorCheck]) -> int:
-  return 1 if any(check.status == "error" for check in checks) else 0
+def doctor_exit_code(checks: list[DoctorCheck], *, strict: bool = False) -> int:
+  failing_statuses = {"error", "warn"} if strict else {"error"}
+  return 1 if any(check.status in failing_statuses for check in checks) else 0

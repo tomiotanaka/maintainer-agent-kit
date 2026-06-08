@@ -94,6 +94,7 @@ def build_parser() -> argparse.ArgumentParser:
 
   doctor_parser = subparsers.add_parser("doctor", help="Check local maintainer-agent setup.")
   doctor_parser.add_argument("--json", action="store_true", help="Print machine-readable JSON.")
+  doctor_parser.add_argument("--strict", action="store_true", help="Treat warnings as failures.")
   doctor_parser.set_defaults(handler=handle_doctor)
 
   import_parser = subparsers.add_parser("import-github", help="Convert GitHub JSON into workflow input Markdown.")
@@ -181,7 +182,7 @@ def handle_doctor(args: argparse.Namespace) -> int:
     print(format_doctor_json(checks))
   else:
     print(format_doctor_checks(checks))
-  return doctor_exit_code(checks)
+  return doctor_exit_code(checks, strict=args.strict)
 
 
 def handle_import_issue(args: argparse.Namespace) -> int:

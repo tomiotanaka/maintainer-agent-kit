@@ -47,6 +47,17 @@ class CliTests(unittest.TestCase):
     self.assertIn("[warn] github-cli: gh not found", output.getvalue())
     run_mock.assert_not_called()
 
+  @patch("maintainer_agent_kit.doctor.shutil.which", return_value=None)
+  @patch("maintainer_agent_kit.doctor.subprocess.run")
+  def test_doctor_strict_fails_on_warnings_without_shelling_out(self, run_mock, _):
+    output = io.StringIO()
+    with redirect_stdout(output):
+      exit_code = main(["doctor", "--strict"])
+
+    self.assertEqual(exit_code, 1)
+    self.assertIn("[warn] github-cli: gh not found", output.getvalue())
+    run_mock.assert_not_called()
+
   @patch("maintainer_agent_kit.doctor.shutil.which", return_value="/usr/bin/gh")
   @patch("maintainer_agent_kit.doctor.subprocess.run")
   def test_doctor_reports_gh_version_when_available(self, run_mock, _):
@@ -109,8 +120,23 @@ class CliTests(unittest.TestCase):
     self.assertEqual(payload["status"], "warn")
     self.assertNotIn("/private/tmp/gh", output.getvalue())
 
+  @patch("maintainer_agent_kit.doctor.shutil.which", return_value="/usr/bin/gh")
+  @patch("maintainer_agent_kit.doctor.subprocess.run")
+  def test_doctor_json_strict_fails_on_warnings(self, run_mock, _):
+    run_mock.side_effect = OSError("raw local path /private/tmp/gh failed")
+
+    output = io.StringIO()
+    with redirect_stdout(output):
+      exit_code = main(["doctor", "--json", "--strict"])
+
+    payload = json.loads(output.getvalue())
+    self.assertEqual(exit_code, 1)
+    self.assertEqual(payload["status"], "warn")
+    self.assertNotIn("/private/tmp/gh", output.getvalue())
+
   def test_doctor_exit_code_only_fails_on_errors(self):
     self.assertEqual(doctor_exit_code([DoctorCheck("github-cli", "warn", "missing")]), 0)
+    self.assertEqual(doctor_exit_code([DoctorCheck("github-cli", "warn", "missing")], strict=True), 1)
     self.assertEqual(doctor_exit_code([DoctorCheck("python", "error", "old")]), 1)
 
   def test_format_doctor_checks_includes_next_step(self):
